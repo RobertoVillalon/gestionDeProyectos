@@ -1,3 +1,5 @@
+<%@page import="cl.ipchile.jira.entity.Usuario"%>
+<%@page import="java.util.List"%>
 <%@page import="cl.ipchile.jira.entity.Tarea"%>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -100,6 +102,24 @@
                 <option value="Baja" <%= ((Tarea) request.getAttribute("tarea")).getPrioridad().equals("Baja") ? "selected" : "" %>>Baja</option>
                 <option value="Media" <%= ((Tarea) request.getAttribute("tarea")).getPrioridad().equals("Media") ? "selected" : "" %>>Media</option>
                 <option value="Alta" <%= ((Tarea) request.getAttribute("tarea")).getPrioridad().equals("Alta") ? "selected" : "" %>>Alta</option>
+            </select>
+            
+            <label for="usuario">Asignar a Usuario:</label>
+            <select id="usuario" name="usuario" required>
+                <% 
+                    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+                    if (usuarios != null) {
+                        for (Usuario usuario : usuarios) {
+                %>
+                            <option value="<%= usuario.getId() %>"><%= usuario.getNombre() %></option>
+                <% 
+                        }
+                    } else {
+                %>
+                        <option value="">No hay usuarios disponibles</option>
+                <% 
+                    }
+                %>
             </select>
 
             <div class="actions">

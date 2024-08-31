@@ -78,7 +78,9 @@
 </head>
 <body>
     <h2>Lista de Usuarios</h2>
-    <a href="crearUsuario.jsp">Crear Nuevo Usuario</a>
+    <a href="svUsuarios?action=create">Crear Nuevo Usuario</a>
+    <br><br>
+    <a href="svTareas?action=list">Ir a lista de Tareas</a>
 
     <table>
         <thead>

@@ -1,10 +1,14 @@
 package cl.ipchile.jira.entity;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +23,9 @@ public class Usuario implements Serializable {
     private String email;
 
     private int edad;
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Tarea> tareas;
 
     public Long getId() {
         return id;
@@ -50,6 +57,14 @@ public class Usuario implements Serializable {
 
     public void setEdad(int edad) {
         this.edad = edad;
+    }
+
+    public List<Tarea> getTareas() {
+        return tareas;
+    }
+
+    public void setTareas(List<Tarea> tareas) {
+        this.tareas = tareas;
     }
 
     public Usuario(String nombre, String email, int edad) {

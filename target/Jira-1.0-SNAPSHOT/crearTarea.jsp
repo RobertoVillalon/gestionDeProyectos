@@ -1,9 +1,5 @@
-<%-- 
-    Document   : tareas
-    Created on : 28-08-2024, 10:11:15 p. m.
-    Author     : rober
---%>
-
+<%@page import="cl.ipchile.jira.entity.Usuario"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -73,6 +69,24 @@
                 <option value="Pendiente">Pendiente</option>
                 <option value="En Progreso">En Progreso</option>
                 <option value="Completada">Completada</option>
+            </select>
+            
+            <label for="usuario">Asignar a Usuario:</label>
+            <select id="usuario" name="usuario" required>
+                <% 
+                    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+                    if (usuarios != null) {
+                        for (Usuario usuario : usuarios) {
+                %>
+                            <option value="<%= usuario.getId() %>"><%= usuario.getNombre() %></option>
+                <% 
+                        }
+                    } else {
+                %>
+                        <option value="">No hay usuarios disponibles</option>
+                <% 
+                    }
+                %>
             </select>
 
             <input type="submit" name="action" value="create">

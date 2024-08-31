@@ -81,7 +81,8 @@
 </head>
 <body>
     <div class="container">
-        <h2>Editar Usuario</h2>
+        <form action="svUsuarios" method="post">
+            <h2>Editar Usuario</h2>
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="id" value="<%= ((Usuario) request.getAttribute("usuario")).getId() %>">
             

@@ -7,7 +7,6 @@ import java.util.List;
 public class UsuarioService {
     UsuarioJpaController usuarioJpaController = new UsuarioJpaController();
 
-    
     public void createUsuario(Usuario usuario) {
         usuarioJpaController.create(usuario);
     }

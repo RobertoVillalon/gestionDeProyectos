@@ -3,8 +3,6 @@ package cl.ipchile.jira.servlets;
 import cl.ipchile.jira.entity.Usuario;
 import cl.ipchile.jira.service.UsuarioService;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,10 +17,11 @@ public class UsuarioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        
+        if ("create".equals(action)) {
+            request.getRequestDispatcher("/crearUsuario.jsp").forward(request, response);
+        }
         if ("list".equals(action)) {
-            List<Usuario> usuarios = usuarioService.getAllUsuarios();
-            request.setAttribute("usuarios", usuarios);
+            request.setAttribute("usuarios", usuarioService.getAllUsuarios());
             request.getRequestDispatcher("/mostrarUsuarios.jsp").forward(request, response);
         }
         else if ("edit".equals(action)) {

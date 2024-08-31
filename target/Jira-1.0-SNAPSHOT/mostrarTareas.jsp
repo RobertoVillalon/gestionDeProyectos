@@ -1,4 +1,5 @@
 <%@page import="cl.ipchile.jira.entity.Tarea"%>
+<%@page import="cl.ipchile.jira.entity.Usuario"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
@@ -75,7 +76,9 @@
 </head>
 <body>
     <h2>Lista de Tareas</h2>
-    <a href="crearTarea.jsp">Crear Nueva Tarea</a>
+    <a href="svTareas?action=create">Crear Nueva Tarea</a>
+        <br><br>
+    <a href="svUsuarios?action=list">Ir a lista de Usuarios</a>
     <table>
         <thead>
             <tr>
@@ -84,6 +87,7 @@
                 <th>Título</th>
                 <th>Descripción</th>
                 <th>Prioridad</th>
+                <th>Encargado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -99,6 +103,7 @@
                     <td><%= tarea.getEstado() %></td>
                     <td><%= tarea.getDescripcion() %></td>
                     <td><%= tarea.getPrioridad() %></td>
+                    <td><%= tarea.getUsuario().getNombre()%></td>
                     <td class="actions">
                         <a href="svTareas?action=view&id=<%= tarea.getId() %>">Ver</a>
                         <a href="svTareas?action=delete&id=<%= tarea.getId() %>" onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">Eliminar</a>

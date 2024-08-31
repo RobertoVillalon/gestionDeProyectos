@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,16 +21,20 @@ public class Tarea {
     private String prioridad;
 
     private String descripcion;
+    
+    @ManyToOne
+    private Usuario usuario;
 
     public Tarea() {
     }
 
     
-    public Tarea(String estado, String titulo, String descripcion, String prioridad) {
+    public Tarea(String estado, String titulo, String descripcion, String prioridad, Usuario usuario) {
         this.estado = estado;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.prioridad = prioridad;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -71,7 +76,14 @@ public class Tarea {
     public void setPrioridad(String prioridad) {
         this.prioridad = prioridad;
     }
-    
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     @Override
     public String toString() {
