@@ -37,7 +37,7 @@
             color: #555;
         }
 
-        input[type="text"], input[type="email"], input[type="number"] {
+        input[type="text"], input[type="email"], input[type="number"], input[type="password"] {
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 5px;
@@ -89,6 +89,9 @@
 
             <label for="edad">Edad:</label>
             <input type="number" id="edad" name="edad" required min="0">
+            
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
 
             <input type="submit" name="action" value="create">
         </form>

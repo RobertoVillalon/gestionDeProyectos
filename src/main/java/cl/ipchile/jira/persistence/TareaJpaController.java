@@ -1,11 +1,13 @@
 package cl.ipchile.jira.persistence;
 
 import cl.ipchile.jira.entity.Tarea;
+import cl.ipchile.jira.entity.Usuario;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
@@ -97,6 +99,20 @@ public class TareaJpaController implements Serializable {
                 tx.rollback();
             }
             throw ex;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Tarea> findUsuarioByEmailAndPassword(Usuario usuario) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Tarea> query = em.createQuery("SELECT t FROM Tarea t WHERE t.usuario = :usuario", Tarea.class);
+            query.setParameter("usuario", usuario);
+
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return null;
         } finally {
             em.close();
         }

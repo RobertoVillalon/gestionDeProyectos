@@ -75,7 +75,7 @@
     
     <div class="user-details">
         <% 
-            Usuario usuario = (Usuario) request.getAttribute("usuario"); 
+            Usuario usuario = (Usuario) request.getAttribute("usuarioView"); 
             if (usuario != null) {
         %>
             <p><strong>ID:</strong> <%= usuario.getId() %></p>

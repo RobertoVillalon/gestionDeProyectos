@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
@@ -96,6 +97,21 @@ public class UsuarioJpaController implements Serializable {
                 tx.rollback();
             }
             throw ex;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Usuario findUsuarioByEmailAndPassword(String email, String password) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Usuario> query = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email AND u.contrasena = :password", Usuario.class);
+            query.setParameter("email", email);
+            query.setParameter("password", password);
+
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         } finally {
             em.close();
         }

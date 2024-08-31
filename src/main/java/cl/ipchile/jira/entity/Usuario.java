@@ -24,6 +24,8 @@ public class Usuario implements Serializable {
 
     private int edad;
     
+    private String contrasena;
+    
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tarea> tareas;
 
@@ -67,10 +69,19 @@ public class Usuario implements Serializable {
         this.tareas = tareas;
     }
 
-    public Usuario(String nombre, String email, int edad) {
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public Usuario(String nombre, String email, int edad, String contrasena) {
         this.nombre = nombre;
         this.email = email;
         this.edad = edad;
+        this.contrasena = contrasena;
     }
 
     public Usuario() {

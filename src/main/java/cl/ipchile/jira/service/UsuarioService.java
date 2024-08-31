@@ -19,11 +19,15 @@ public class UsuarioService {
         return usuarioJpaController.findAllUsuarios();
     }
 
-    public void updateUsuario(Usuario tarea) {
-        usuarioJpaController.update(tarea);
+    public void updateUsuario(Usuario usuario) {
+        usuarioJpaController.update(usuario);
     }
 
     public void deleteUsuario(Long id) {
         usuarioJpaController.delete(id);
+    }
+    
+    public Usuario loginUser(String email, String password){
+        return usuarioJpaController.findUsuarioByEmailAndPassword(email, password);
     }
 }

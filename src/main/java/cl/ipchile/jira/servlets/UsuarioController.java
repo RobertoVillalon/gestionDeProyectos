@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "svUsuarios", urlPatterns = {"/svUsuarios"})
 public class UsuarioController extends HttpServlet {    
@@ -17,34 +18,46 @@ public class UsuarioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        if ("create".equals(action)) {
-            request.getRequestDispatcher("/crearUsuario.jsp").forward(request, response);
-        }
-        if ("list".equals(action)) {
-            request.setAttribute("usuarios", usuarioService.getAllUsuarios());
-            request.getRequestDispatcher("/mostrarUsuarios.jsp").forward(request, response);
-        }
-        else if ("edit".equals(action)) {
-            Long id = Long.valueOf(request.getParameter("id"));
-            Usuario usuario = usuarioService.getUsuarioById(id);
-            request.setAttribute("usuario", usuario);
-            request.getRequestDispatcher("/editarUsuario.jsp").forward(request, response);
-
-        } 
-        else if ("view".equals(action)) {
-            Long id = Long.valueOf(request.getParameter("id"));
-            Usuario usuario = usuarioService.getUsuarioById(id);
-            request.setAttribute("usuario", usuario);
-            request.getRequestDispatcher("/verUsuario.jsp").forward(request, response);
-        }
-        else if("delete".equals(action)){
-            Long id = Long.valueOf(request.getParameter("id"));
-            usuarioService.deleteUsuario(id);
-            response.sendRedirect("svUsuarios?action=list");
-
-        }
-        else {
+                
+        System.out.println(action);
+        
+        if (null == action) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
+        }
+        else switch (action) {
+            case "create":
+                request.getRequestDispatcher("/crearUsuario.jsp").forward(request, response);
+                break;
+            case "list":
+                request.setAttribute("usuarios", usuarioService.getAllUsuarios());
+                request.getRequestDispatcher("/mostrarUsuarios.jsp").forward(request, response);
+                break;
+            case "edit":
+                {
+                    Long id = Long.valueOf(request.getParameter("id"));
+                    Usuario usuarioEdit = usuarioService.getUsuarioById(id);
+                    request.setAttribute("usuario", usuarioEdit);
+                    request.getRequestDispatcher("/editarUsuario.jsp").forward(request, response);
+                    break;
+                }
+            case "view":
+                {
+                    Long id = Long.valueOf(request.getParameter("id"));
+                    Usuario usuarioView = usuarioService.getUsuarioById(id);
+                    request.setAttribute("usuarioView", usuarioView);
+                    request.getRequestDispatcher("/verUsuario.jsp").forward(request, response);
+                    break;
+                }
+            case "delete":
+                {
+                    Long id = Long.valueOf(request.getParameter("id"));
+                    usuarioService.deleteUsuario(id);
+                    response.sendRedirect("svUsuarios?action=list");
+                    break;
+                }
+            default:
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
+                break;
         }
     }
 
@@ -54,28 +67,56 @@ public class UsuarioController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         
-        if ("create".equals(action)) {
-            String nombre = request.getParameter("nombre");
-            String email = request.getParameter("email");
-            String edad = request.getParameter("edad");
-            Usuario usuario = new Usuario(nombre, email, Integer.parseInt(edad));
-            usuarioService.createUsuario(usuario);
-            response.sendRedirect("svUsuarios?action=list");
-        } else if ("update".equals(action)) {
-            Long id = Long.valueOf(request.getParameter("id"));
-            String nombre = request.getParameter("nombre");
-            String email = request.getParameter("email");
-            String edad = request.getParameter("edad");
-            Usuario usuario = new Usuario(nombre, email, Integer.parseInt(edad));
-            usuario.setId(id);
-            usuarioService.updateUsuario(usuario);
-            response.sendRedirect("svUsuarios?action=list");
-        } else if ("delete".equals(action)) {
-            Long id = Long.valueOf(request.getParameter("id"));
-            usuarioService.deleteUsuario(id);
-            response.sendRedirect("svUsuarios?action=list");
-        } else {
+        if (null == action) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
+        } else switch (action) {
+            case "create":
+                {
+                    String nombre = request.getParameter("nombre");
+                    String email = request.getParameter("email");
+                    String edad = request.getParameter("edad");
+                    String contrasena = request.getParameter("password");
+                    Usuario usuario = new Usuario(nombre, email, Integer.parseInt(edad), contrasena);
+                    usuarioService.createUsuario(usuario);
+                    response.sendRedirect("svUsuarios?action=list");
+                    break;
+                }
+            case "login":
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+                Usuario usuario = usuarioService.loginUser(email, password);
+                if (usuario != null) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("usuarioActual", usuario);
+                    response.sendRedirect("index.jsp");
+                } else {
+                    request.setAttribute("errorMessage", "Email o contraseña incorrectos");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                }
+                break;
+            case "update":
+                {
+                    Long id = Long.valueOf(request.getParameter("id"));
+                    String nombre = request.getParameter("nombre");
+                    String emailUpdate = request.getParameter("email");
+                    String edad = request.getParameter("edad");
+                    String contrasena = request.getParameter("password");
+                    Usuario usuarioUpdate = new Usuario(nombre, emailUpdate, Integer.parseInt(edad), contrasena);
+                    usuarioUpdate.setId(id);
+                    usuarioService.updateUsuario(usuarioUpdate);
+                    response.sendRedirect("svUsuarios?action=list");
+                    break;
+                }
+            case "delete":
+                {
+                    Long id = Long.valueOf(request.getParameter("id"));
+                    usuarioService.deleteUsuario(id);
+                    response.sendRedirect("svUsuarios?action=list");
+                    break;
+                }
+            default:
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
+                break;
         }        
     }
 }

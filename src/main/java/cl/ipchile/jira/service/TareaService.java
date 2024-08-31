@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cl.ipchile.jira.service;
 
-
 import cl.ipchile.jira.entity.Tarea;
+import cl.ipchile.jira.entity.Usuario;
 import cl.ipchile.jira.persistence.TareaJpaController;
 import java.util.List;
 
@@ -26,6 +22,10 @@ public class TareaService {
 
     public List<Tarea> getAllTareas() {
         return tareaJpaController.findAllTareas();
+    }
+    
+    public List<Tarea> getAllTareasByUser(Usuario user) {
+        return tareaJpaController.findUsuarioByEmailAndPassword(user);
     }
 
     public void updateTarea(Tarea tarea) {

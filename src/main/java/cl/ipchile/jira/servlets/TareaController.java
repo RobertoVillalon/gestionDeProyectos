@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -24,15 +25,19 @@ public class TareaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+
         
         if ("create".equals(action)) {
             request.setAttribute("usuarios", usuarioService.getAllUsuarios());
             request.getRequestDispatcher("/crearTarea.jsp").forward(request, response);
         }
         if ("list".equals(action)) {
-            List<Usuario> usuarios = usuarioService.getAllUsuarios();
-            request.setAttribute("usuarios", usuarios);
-            List<Tarea> tareas = tareaService.getAllTareas();
+            Usuario usuarioActual = (Usuario) request.getSession().getAttribute("usuarioActual");
+
+            //List<Usuario> usuarios = usuarioService.getAllUsuarios();
+            //request.setAttribute("usuarios", usuarios);
+            List<Tarea> tareas = tareaService.getAllTareasByUser(usuarioActual);
+            System.out.println(tareas);
             request.setAttribute("tareas", tareas);
             request.getRequestDispatcher("/mostrarTareas.jsp").forward(request, response);
         }
