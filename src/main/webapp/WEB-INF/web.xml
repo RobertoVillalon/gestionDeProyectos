@@ -8,4 +8,9 @@
             30
         </session-timeout>
     </session-config>
+
+    <persistence-context-ref>   
+       <persistence-context-ref-name>jpa/Persistencia</persistence-context-ref-name>
+       <persistence-unit-name>Persistencia</persistence-unit-name>
+    </persistence-context-ref>
 </web-app>

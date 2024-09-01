@@ -61,6 +61,9 @@
             
             <input type="submit" name="action" value="login">
         </form>
+        <p>No tienes una cuenta? 
+        <a href="svUsuarios?action=register">Registrate</a>
+        </p>
     </div>
 </body>
 </html>

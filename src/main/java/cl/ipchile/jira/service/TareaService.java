@@ -2,37 +2,45 @@ package cl.ipchile.jira.service;
 
 import cl.ipchile.jira.entity.Tarea;
 import cl.ipchile.jira.entity.Usuario;
-import cl.ipchile.jira.persistence.TareaJpaController;
+import jakarta.ejb.Stateful;
 import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
+@Stateful
 public class TareaService {
-    private TareaJpaController tareaJpaController;
 
-    public TareaService() {
-        this.tareaJpaController = new TareaJpaController(); // Asegúrate de que el controlador esté correctamente configurado
-    }
+    @PersistenceContext(unitName = "Persistencia")
+    private EntityManager em;
 
     public void createTarea(Tarea tarea) {
-        tareaJpaController.create(tarea);
+        em.persist(tarea);
     }
 
-    public Tarea getTareaById(Long id) {
-        return tareaJpaController.findTarea(id);
-    }
-
-    public List<Tarea> getAllTareas() {
-        return tareaJpaController.findAllTareas();
-    }
-    
-    public List<Tarea> getAllTareasByUser(Usuario user) {
-        return tareaJpaController.findUsuarioByEmailAndPassword(user);
+    public Tarea findTareaById(Long id) {
+        return em.find(Tarea.class, id);
     }
 
     public void updateTarea(Tarea tarea) {
-        tareaJpaController.update(tarea);
+        em.merge(tarea);
     }
 
     public void deleteTarea(Long id) {
-        tareaJpaController.delete(id);
+        Tarea tarea = findTareaById(id);
+        if (tarea != null) {
+            em.remove(tarea);
+        }
+    }
+
+    public List<Tarea> findAllTareas() {
+        TypedQuery<Tarea> query = em.createQuery("SELECT t FROM Tarea t", Tarea.class);
+        return query.getResultList();
+    }
+
+    public List<Tarea> findTareasByUsuario(Usuario usuario) {
+        TypedQuery<Tarea> query = em.createQuery("SELECT t FROM Tarea t WHERE t.usuario = :usuario", Tarea.class);
+        query.setParameter("usuario", usuario);
+        return query.getResultList();
     }
 }

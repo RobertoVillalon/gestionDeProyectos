@@ -2,25 +2,33 @@ package cl.ipchile.jira.servlets;
 
 import cl.ipchile.jira.entity.Usuario;
 import cl.ipchile.jira.service.UsuarioService;
+import jakarta.ejb.EJB;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "svUsuarios", urlPatterns = {"/svUsuarios"})
 public class UsuarioController extends HttpServlet {    
-
-    UsuarioService usuarioService = new UsuarioService();
+    @EJB
+    UsuarioService usuarioService;
+    
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        // Asegúrate de que la inyección haya sido realizada correctamente
+        if (usuarioService == null) {
+            throw new ServletException("UsuarioService no inyectado correctamente");
+        }
+    }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-                
-        System.out.println(action);
-        
+                        
         if (null == action) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");
         }
@@ -29,13 +37,15 @@ public class UsuarioController extends HttpServlet {
                 request.getRequestDispatcher("/crearUsuario.jsp").forward(request, response);
                 break;
             case "list":
-                request.setAttribute("usuarios", usuarioService.getAllUsuarios());
+                request.setAttribute("usuarios", usuarioService.findAllUsuarios());
                 request.getRequestDispatcher("/mostrarUsuarios.jsp").forward(request, response);
                 break;
+            case "register":
+                request.getRequestDispatcher("/register.jsp").forward(request, response);
             case "edit":
                 {
                     Long id = Long.valueOf(request.getParameter("id"));
-                    Usuario usuarioEdit = usuarioService.getUsuarioById(id);
+                    Usuario usuarioEdit = usuarioService.findUsuarioById(id);
                     request.setAttribute("usuario", usuarioEdit);
                     request.getRequestDispatcher("/editarUsuario.jsp").forward(request, response);
                     break;
@@ -43,7 +53,7 @@ public class UsuarioController extends HttpServlet {
             case "view":
                 {
                     Long id = Long.valueOf(request.getParameter("id"));
-                    Usuario usuarioView = usuarioService.getUsuarioById(id);
+                    Usuario usuarioView = usuarioService.findUsuarioById(id);
                     request.setAttribute("usuarioView", usuarioView);
                     request.getRequestDispatcher("/verUsuario.jsp").forward(request, response);
                     break;
@@ -66,6 +76,9 @@ public class UsuarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        
+                System.out.println(action);
+
         
         if (null == action) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida.");

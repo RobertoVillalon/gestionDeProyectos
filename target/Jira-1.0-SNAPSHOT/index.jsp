@@ -5,11 +5,6 @@
 <html>
 <head>
 <%
-    Usuario usuario = (Usuario) session.getAttribute("usuarioActual");
-    if (usuario == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
 %>
     <meta charset="UTF-8">
     <title>Gestor de Tareas</title>
@@ -64,7 +59,6 @@
 <body>
 
     <div class="header">
-    <h1>Bienvenido, <%= usuario.getNombre() %></h1>
     </div>
 
     <div class="nav">
